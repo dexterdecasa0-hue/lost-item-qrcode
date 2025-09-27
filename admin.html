@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+<style>
+body{font-family:Arial;padding:20px;}
+h1{color:#004080;}
+table{width:100%;border-collapse:collapse;margin-top:20px;}
+th,td{border:1px solid #ccc;padding:10px;text-align:center;}
+th{background:#004080;color:white;}
+#logSection{margin-top:30px;}
+#logList{border:1px solid #ccc;padding:10px;border-radius:5px;background:#f9f9f9;}
+</style>
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+<button onclick="logout()">Logout</button>
+<table id="itemTable">
+<thead><tr>
+<th>Item</th><th>Owner</th><th>Email</th><th>Status</th><th>Action</th>
+</tr></thead>
+<tbody></tbody>
+</table>
+<div id="logSection">
+<h2>📧 Notification Log</h2>
+<div id="logList">No notifications yet.</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
+  authDomain: "lost-item-qr.firebaseapp.com",
+  databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com",
+  projectId: "lost-item-qr",
+  storageBucket: "lost-item-qr.appspot.com",
+  messagingSenderId: "1026817510307",
+  appId: "1:1026817510307:web:9a67340577a04797912816",
+  measurementId: "G-QY02LG8PCX"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+if(localStorage.getItem("isAdmin")!=="true"){
+  alert("⚠️ You must log in as admin!");
+  window.location.href="admin-login.html";
+}
+
+function logout(){
+  localStorage.removeItem("isAdmin");
+  window.location.href="admin-login.html";
+}
+
+const tbody=document.querySelector("#itemTable tbody");
+const logList=document.getElementById("logList");
+
+function renderLogs(){
+  db.ref("lostItems").once("value").then(snap=>{
+    const items = snap.val();
+    if(!items){logList.innerHTML="No notifications yet.";return;}
+    logList.innerHTML="";
+    Object.values(items).forEach(item=>{
+      logList.innerHTML+=`<p>📧 Item: ${item.item}, Owner: ${item.email}, Status: ${item.status}</p>`;
+    });
+  });
+}
+
+function renderTable(){
+  db.ref("lostItems").on("value",snap=>{
+    const items = snap.val(); tbody.innerHTML="";
+    if(!items)return;
+    Object.values(items).forEach(item=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td>${item.item}</td><td>${item.name}</td><td>${item.email}</td><td>${item.status}</td>
+        <td>
+          <select onchange="updateStatus(${item.id}, this.value)">
+            <option value="Pending" ${item.status=="Pending"?"selected":""}>Pending</option>
+            <option value="Reported Found" ${item.status=="Reported Found"?"selected":""}>Reported Found</option>
+            <option value="Claimed" ${item.status=="Claimed"?"selected":""}>Claimed</option>
+            <option value="Returned" ${item.status=="Returned"?"selected":""}>Returned</option>
+          </select>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    renderLogs();
+  });
+}
+
+function updateStatus(id,newStatus){
+  db.ref("lostItems/"+id).update({status:newStatus});
+}
+
+renderTable();
+</script>
+</body>
+</html>

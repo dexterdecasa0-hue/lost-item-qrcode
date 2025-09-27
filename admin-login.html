@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login</title>
+<style>
+body{font-family:Arial;padding:50px;text-align:center;}
+form{display:inline-block;text-align:left;}
+label{display:block;margin-top:10px;}
+input,button{width:100%;padding:10px;margin-top:5px;border:1px solid #ccc;border-radius:5px;}
+button{background:#004080;color:white;cursor:pointer;}
+</style>
+</head>
+<body>
+<h1>Admin Login</h1>
+<form id="loginForm">
+<label>Username</label>
+<input type="text" id="username" placeholder="admin" required>
+<label>Password</label>
+<input type="password" id="password" placeholder="1234" required>
+<button type="submit">Login</button>
+</form>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const user=document.getElementById("username").value;
+  const pass=document.getElementById("password").value;
+  if(user==="admin" && pass==="1234"){
+    localStorage.setItem("isAdmin","true");
+    window.location.href="admin.html";
+  } else alert("❌ Wrong credentials!");
+});
+</script>
+</body>
+</html>

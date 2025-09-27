@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register Lost Item</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+form { max-width: 400px; margin: auto; }
+label { display: block; margin-top: 10px; }
+input, button { width: 100%; padding: 10px; margin-top: 5px; border:1px solid #ccc; border-radius:5px;}
+button { background:#004080; color:white; cursor:pointer; }
+#qrContainer { text-align:center; margin-top:20px; }
+#emailNotice { color:green; font-weight:bold; text-align:center; margin-top:10px; }
+</style>
+</head>
+<body>
+<h1>Register Lost Item</h1>
+<form id="registerForm">
+<label>Full Name</label>
+<input type="text" id="name" required>
+<label>University Email</label>
+<input type="email" id="email" placeholder="name@universityofbohol.edu.ph" required>
+<label>Item Lost</label>
+<input type="text" id="item" required>
+<button type="submit">Register</button>
+</form>
+
+<div id="qrContainer"></div>
+<p id="emailNotice"></p>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
+  authDomain: "lost-item-qr.firebaseapp.com",
+  databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com",
+  projectId: "lost-item-qr",
+  storageBucket: "lost-item-qr.appspot.com",
+  messagingSenderId: "1026817510307",
+  appId: "1:1026817510307:web:9a67340577a04797912816",
+  measurementId: "G-QY02LG8PCX"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function generateQR(text,size=150){
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width=canvas.height=size;
+  ctx.fillStyle="white"; ctx.fillRect(0,0,size,size);
+  ctx.fillStyle="black"; ctx.font="14px Arial";
+  ctx.fillText("QR for:",10,20);
+  ctx.fillText(text,10,40);
+  return canvas;
+}
+
+document.getElementById("registerForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const item = document.getElementById("item").value;
+
+  if(!email.endsWith("@universityofbohol.edu.ph")){
+    alert("❌ Use your University of Bohol email.");
+    return;
+  }
+
+  const id = Date.now();
+  const newItem = {id,name,email,item,status:"Pending"};
+  db.ref("lostItems/"+id).set(newItem)
+    .then(()=>{
+      const qrLink = window.location.origin+"/item.html?item="+id;
+      const qr = generateQR(qrLink);
+      document.getElementById("qrContainer").innerHTML="<h3>Your QR Code:</h3>";
+      document.getElementById("qrContainer").appendChild(qr);
+      document.getElementById("emailNotice").innerText=`📧 Confirmation email sent to ${email} (simulated)`;
+      alert("✅ Item registered successfully!");
+    })
+    .catch(err=>alert("❌ Error: "+err));
+});
+</script>
+</body>
+</html>
