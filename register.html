@@ -14,15 +14,19 @@ button { background:#004080; color:white; cursor:pointer; }
 </style>
 </head>
 <body>
-<h1>Register Lost Item</h1>
+<h1>Register Item</h1>
+
 <form id="registerForm">
-<label>Full Name</label>
-<input type="text" id="name" required>
-<label>University Email</label>
-<input type="email" id="email" placeholder="name@universityofbohol.edu.ph" required>
-<label>Item Lost</label>
-<input type="text" id="item" required>
-<button type="submit">Register</button>
+  <label>Full Name</label>
+  <input type="text" id="name" required>
+
+  <label>University Email</label>
+  <input type="email" id="email" placeholder="name@universityofbohol.edu.ph" required>
+
+  <label>Item Name</label>
+  <input type="text" id="item" required>
+
+  <button type="submit">Register</button>
 </form>
 
 <div id="qrContainer"></div>
@@ -31,7 +35,9 @@ button { background:#004080; color:white; cursor:pointer; }
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
 <script>
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
   authDomain: "lost-item-qr.firebaseapp.com",
@@ -45,7 +51,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-function generateQR(text,size=150){
+// Simple QR generator (placeholder)
+function generateQR(text, size=150){
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   canvas.width=canvas.height=size;
@@ -56,29 +63,40 @@ function generateQR(text,size=150){
   return canvas;
 }
 
+// Register button handler
 document.getElementById("registerForm").addEventListener("submit", function(e){
-  e.preventDefault();
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const item = document.getElementById("item").value;
+  e.preventDefault(); // prevent page reload
 
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const item = document.getElementById("item").value.trim();
+
+  // Check university email
   if(!email.endsWith("@universityofbohol.edu.ph")){
-    alert("❌ Use your University of Bohol email.");
+    alert("❌ Please use your University of Bohol email.");
     return;
   }
 
-  const id = Date.now();
-  const newItem = {id,name,email,item,status:"Pending"};
+  // Generate unique ID
+  const id = Date.now(); 
+  const newItem = {id, name, email, item, status:"Registered"};
+
+  // Save to Firebase
   db.ref("lostItems/"+id).set(newItem)
     .then(()=>{
-      const qrLink = window.location.origin+"/item.html?item="+id;
+      // Generate QR code
+      const qrLink = window.location.origin + "/item.html?item=" + id;
       const qr = generateQR(qrLink);
-      document.getElementById("qrContainer").innerHTML="<h3>Your QR Code:</h3>";
-      document.getElementById("qrContainer").appendChild(qr);
-      document.getElementById("emailNotice").innerText=`📧 Confirmation email sent to ${email} (simulated)`;
-      alert("✅ Item registered successfully!");
+      const container = document.getElementById("qrContainer");
+      container.innerHTML="<h3>Your QR Code:</h3>";
+      container.appendChild(qr);
+
+      document.getElementById("emailNotice").innerText = `📧 Confirmation email sent to ${email} (simulated)`;
+
+      // Clear form
+      document.getElementById("registerForm").reset();
     })
-    .catch(err=>alert("❌ Error: "+err));
+    .catch(err => alert("❌ Error: " + err));
 });
 </script>
 </body>
