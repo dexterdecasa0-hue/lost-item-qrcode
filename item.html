@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <title>Found Item Report</title>
 <style>
-body{font-family:Arial;padding:20px;}
-h1{color:#004080;text-align:center;}
-.card{border:1px solid #ccc;padding:20px;border-radius:8px;}
-button{padding:10px;background:green;color:white;border:none;border-radius:5px;cursor:pointer;}
-#emailNotice{margin-top:15px;font-weight:bold;color:blue;}
+body { font-family: Arial; padding: 20px; }
+h1 { color: #004080; text-align: center; }
+.card { border:1px solid #ccc; padding:20px; border-radius:8px; margin-top: 20px; }
+button { padding:10px; background:green; color:white; border:none; border-radius:5px; cursor:pointer; }
+#emailNotice { margin-top: 15px; font-weight: bold; color: blue; text-align:center; }
 </style>
 </head>
 <body>
@@ -16,8 +16,10 @@ button{padding:10px;background:green;color:white;border:none;border-radius:5px;c
 <div id="itemCard"></div>
 <p id="emailNotice"></p>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
@@ -32,36 +34,39 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// Get item ID from QR URL
 const params = new URLSearchParams(window.location.search);
 const itemId = params.get("item");
 
-db.ref("lostItems/"+itemId).once("value").then(snapshot=>{
+// Fetch item data from Firebase
+db.ref("lostItems/"+itemId).once("value").then(snapshot => {
   const item = snapshot.val();
   if(!item){
     document.getElementById("itemCard").innerHTML="<p>❌ Item not found.</p>";
     return;
   }
-  document.getElementById("itemCard").innerHTML=`
+
+  document.getElementById("itemCard").innerHTML = `
     <div class="card">
       <h3>${item.item}</h3>
       <p>Owner: ${item.name} <br>Email: ${item.email}</p>
       <p>Status: ${item.status}</p>
-      <button onclick="reportFound(${item.id})">📢 Report as Found</button>
+      <button id="reportBtn">📢 Report as Found</button>
     </div>
   `;
-});
 
-function reportFound(id){
-  db.ref("lostItems/"+id).once("value").then(snap=>{
-    const item = snap.val();
-    db.ref("lostItems/"+id).update({status:"Reported Found"})
+  // Report Found button
+  document.getElementById("reportBtn").addEventListener("click", () => {
+    db.ref("lostItems/"+itemId).update({status:"Reported Found"})
       .then(()=>{
-        document.getElementById("emailNotice").innerText=`📧 Notification sent to ${item.email} (simulated)`;
-        alert("✅ Report submitted! Owner notified (simulated).");
-        location.reload();
-      });
+        // Simulate sending email to owner
+        document.getElementById("emailNotice").innerText = `📧 Notification sent to ${item.email} (simulated)`;
+        alert(`✅ Report submitted! ${item.name} will be notified.`);
+        location.reload(); // reload to update status
+      })
+      .catch(err => alert("❌ Error: "+err));
   });
-}
+});
 </script>
 </body>
 </html>
