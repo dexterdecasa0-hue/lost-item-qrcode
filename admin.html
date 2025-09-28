@@ -5,21 +5,85 @@
 <title>Admin Dashboard</title>
 <style>
 body { font-family: Arial; padding: 20px; }
-#itemsContainer { max-width: 600px; margin:auto;}
+#itemsContainer { max-width: 800px; margin:auto;}
 .item { border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;}
 button { padding:5px 10px; cursor:pointer; background:#004080; color:white; border:none; border-radius:3px; margin-top:5px;}
 button.delete { background:red; }
+.status { font-weight:bold; }
+.new { color:green; }
+.found { color:orange; }
 </style>
 </head>
 <body>
 <h1>Admin Dashboard</h1>
 <div id="itemsContainer"></div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
-  authDomain: "
+  authDomain: "lost-item-qr.firebaseapp.com",
+  databaseURL: "https://lost-item-qr-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "lost-item-qr",
+  storageBucket: "lost-item-qr.firebasestorage.app",
+  messagingSenderId: "1026817510307",
+  appId: "1:1026817510307:web:9a67340577a04797912816",
+  measurementId: "G-QY02LG8PCX"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const container = document.getElementById("itemsContainer");
+
+// Real-time updates
+db.ref("lostItems").on("value", snapshot=>{
+  container.innerHTML = "";
+  const items = snapshot.val();
+  if(!items){ container.innerHTML="<p>No items registered.</p>"; return; }
+
+  Object.values(items).forEach(item=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    let statusClass = item.status==="Found" ? "found" : "new";
+
+    div.innerHTML = `
+      <strong>Item:</strong> ${item.item}<br>
+      <strong>Owner:</strong> ${item.name}<br>
+      <strong>Email:</strong> ${item.email}<br>
+      <strong>Status:</strong> <span class="status ${statusClass}">${item.status}</span><br>
+      <button onclick="markFound(${item.id})">Mark as Found</button>
+      <button class="delete" onclick="deleteItem(${item.id})">Delete Item</button>
+    `;
+    container.appendChild(div);
+
+    // 🔔 Notifications
+    if(item.newRegistration){
+      alert(`🔔 New item registered: ${item.item} by ${item.name}`);
+      db.ref("lostItems/"+item.id+"/newRegistration").set(false);
+    }
+
+    if(item.reportedFound){
+      alert(`🔔 Item reported as found: ${item.item}`);
+      db.ref("lostItems/"+item.id+"/reportedFound").set(false);
+    }
+  });
+});
+
+function markFound(id){
+  db.ref("lostItems/"+id+"/status").set("Found")
+    .then(()=>alert("✅ Status updated to Found!"))
+    .catch(err=>alert("Error: "+err));
+}
+
+function deleteItem(id){
+  if(confirm("Are you sure to delete this item?")){
+    db.ref("lostItems/"+id).remove()
+      .then(()=>alert("✅ Item deleted!"))
+      .catch(err=>alert("Error: "+err));
+  }
+}
+</script>
+</body>
+</html>
