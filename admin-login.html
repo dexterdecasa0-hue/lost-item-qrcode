@@ -4,32 +4,32 @@
 <meta charset="UTF-8">
 <title>Admin Login</title>
 <style>
-body{font-family:Arial;padding:50px;text-align:center;}
-form{display:inline-block;text-align:left;}
-label{display:block;margin-top:10px;}
-input,button{width:100%;padding:10px;margin-top:5px;border:1px solid #ccc;border-radius:5px;}
-button{background:#004080;color:white;cursor:pointer;}
+body { font-family: Arial; padding: 20px; text-align:center;}
+input, button { width:200px; padding:10px; margin:5px;}
+button { background:#004080; color:white; cursor:pointer;}
 </style>
 </head>
 <body>
 <h1>Admin Login</h1>
-<form id="loginForm">
-<label>Username</label>
-<input type="text" id="username" placeholder="admin" required>
-<label>Password</label>
-<input type="password" id="password" placeholder="1234" required>
+<form id="adminForm">
+<input type="text" id="username" placeholder="Username" required><br>
+<input type="password" id="password" placeholder="Password" required><br>
 <button type="submit">Login</button>
 </form>
+<p id="msg"></p>
 
 <script>
-document.getElementById("loginForm").addEventListener("submit",function(e){
+document.getElementById("adminForm").addEventListener("submit", function(e){
   e.preventDefault();
-  const user=document.getElementById("username").value;
-  const pass=document.getElementById("password").value;
-  if(user==="admin" && pass==="1234"){
-    localStorage.setItem("isAdmin","true");
-    window.location.href="admin.html";
-  } else alert("❌ Wrong credentials!");
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  // Hardcoded admin credentials for demo
+  if(username==="admin" && password==="admin123"){
+    window.location.href = "admin.html";
+  } else {
+    document.getElementById("msg").innerText="❌ Invalid credentials!";
+  }
 });
 </script>
 </body>
