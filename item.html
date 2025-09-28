@@ -2,19 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Found Item Report</title>
+<title>Report / View Items</title>
 <style>
 body { font-family: Arial; padding: 20px; }
-h1 { color: #004080; text-align: center; }
-.card { border:1px solid #ccc; padding:20px; border-radius:8px; margin-top: 20px; }
-button { padding:10px; background:green; color:white; border:none; border-radius:5px; cursor:pointer; }
-#emailNotice { margin-top: 15px; font-weight: bold; color: blue; text-align:center; }
+#itemsContainer { max-width: 600px; margin:auto;}
+.item { border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;}
+button { padding:5px 10px; cursor:pointer; background:#004080; color:white; border:none; border-radius:3px;}
 </style>
 </head>
 <body>
-<h1>Item Information</h1>
-<div id="itemCard"></div>
-<p id="emailNotice"></p>
+<h1>Report / View Found Items</h1>
+<div id="itemsContainer"></div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -24,49 +22,50 @@ button { padding:10px; background:green; color:white; border:none; border-radius
 const firebaseConfig = {
   apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
   authDomain: "lost-item-qr.firebaseapp.com",
-  databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com",
+  databaseURL: "https://lost-item-qr-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "lost-item-qr",
-  storageBucket: "lost-item-qr.appspot.com",
+  storageBucket: "lost-item-qr.firebasestorage.app",
   messagingSenderId: "1026817510307",
   appId: "1:1026817510307:web:9a67340577a04797912816",
   measurementId: "G-QY02LG8PCX"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Get item ID from QR URL
-const params = new URLSearchParams(window.location.search);
-const itemId = params.get("item");
+const container = document.getElementById("itemsContainer");
 
-// Fetch item data from Firebase
-db.ref("lostItems/"+itemId).once("value").then(snapshot => {
-  const item = snapshot.val();
-  if(!item){
-    document.getElementById("itemCard").innerHTML="<p>❌ Item not found.</p>";
-    return;
-  }
-
-  document.getElementById("itemCard").innerHTML = `
-    <div class="card">
-      <h3>${item.item}</h3>
-      <p>Owner: ${item.name} <br>Email: ${item.email}</p>
-      <p>Status: ${item.status}</p>
-      <button id="reportBtn">📢 Report as Found</button>
-    </div>
-  `;
-
-  // Report Found button
-  document.getElementById("reportBtn").addEventListener("click", () => {
-    db.ref("lostItems/"+itemId).update({status:"Reported Found"})
-      .then(()=>{
-        // Simulate sending email to owner
-        document.getElementById("emailNotice").innerText = `📧 Notification sent to ${item.email} (simulated)`;
-        alert(`✅ Report submitted! ${item.name} will be notified.`);
-        location.reload(); // reload to update status
-      })
-      .catch(err => alert("❌ Error: "+err));
+function loadItems() {
+  container.innerHTML = "<p>Loading items...</p>";
+  db.ref("lostItems").once("value", snapshot=>{
+    container.innerHTML = "";
+    const items = snapshot.val();
+    if(!items) { container.innerHTML="<p>No items found.</p>"; return; }
+    Object.values(items).forEach(item=>{
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `
+        <strong>${item.item}</strong><br>
+        Registered by: ${item.name} (${item.email})<br>
+        Status: ${item.status}<br>
+        <button onclick="reportFound(${item.id})">I Found This Item</button>
+      `;
+      container.appendChild(div);
+    });
   });
-});
+}
+
+function reportFound(id) {
+  const email = prompt("Enter your email to notify the owner:");
+  if(!email) return alert("Email required.");
+  db.ref("lostItems/"+id+"/status").set("Found")
+    .then(()=>{
+      alert("✅ Reported as found! The owner will be notified (simulated).");
+      loadItems();
+    }).catch(err=>alert("Error: "+err));
+}
+
+loadItems();
 </script>
 </body>
 </html>
