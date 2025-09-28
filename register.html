@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Register Lost Item</title>
+<title>Register Item</title>
 <style>
 body { font-family: Arial; padding: 20px; }
 form { max-width: 400px; margin: auto; }
@@ -32,73 +32,64 @@ button { background:#004080; color:white; cursor:pointer; }
 <div id="qrContainer"></div>
 <p id="emailNotice"></p>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
-<!-- QR Code Library -->
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 <script>
-window.onload = function() {
+const firebaseConfig = {
+  apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
+  authDomain: "lost-item-qr.firebaseapp.com",
+  databaseURL: "https://lost-item-qr-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "lost-item-qr",
+  storageBucket: "lost-item-qr.firebasestorage.app",
+  messagingSenderId: "1026817510307",
+  appId: "1:1026817510307:web:9a67340577a04797912816",
+  measurementId: "G-QY02LG8PCX"
+};
 
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
-    authDomain: "lost-item-qr.firebaseapp.com",
-    databaseURL: "https://lost-item-qr-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "lost-item-qr",
-    storageBucket: "lost-item-qr.firebasestorage.app",
-    messagingSenderId: "1026817510307",
-    appId: "1:1026817510307:web:9a67340577a04797912816",
-    measurementId: "G-QY02LG8PCX"
-  };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+function generateQR(text, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "<h3>Your QR Code:</h3>";
+  const canvas = document.createElement("canvas");
+  container.appendChild(canvas);
 
-  // Function to generate a real QR code
-  function generateQR(text, containerId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = "<h3>Your QR Code:</h3>";
-    const canvas = document.createElement("canvas");
-    container.appendChild(canvas);
-    QRCode.toCanvas(canvas, text, { width: 150 }, function(error) {
-      if (error) console.error(error);
-    });
+  QRCode.toCanvas(canvas, text, { width: 150 }, function(error) {
+    if (error) console.error(error);
+    else console.log("✅ QR code generated!");
+  });
+}
+
+document.getElementById("registerForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const item = document.getElementById("item").value.trim();
+
+  if(!email.endsWith("@universityofbohol.edu.ph")){
+    alert("❌ Please use your University of Bohol email.");
+    return;
   }
 
-  // Register form handler
-  document.getElementById("registerForm").addEventListener("submit", function(e){
-    e.preventDefault();
+  const id = Date.now();
+  const newItem = {id, name, email, item, status:"Registered", newRegistration:true, reportedFound:false};
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const item = document.getElementById("item").value.trim();
+  db.ref("lostItems/"+id).set(newItem)
+    .then(()=>{
+      const qrLink = window.location.origin + "/report.html?item=" + id;
+      generateQR(qrLink, "qrContainer");
 
-    if(!email.endsWith("@universityofbohol.edu.ph")){
-      alert("❌ Please use your University of Bohol email.");
-      return;
-    }
+      document.getElementById("emailNotice").innerText =
+        `📧 Item registered! QR code generated for scanning.`;
 
-    const id = Date.now();
-    const newItem = {id, name, email, item, status:"Registered"};
-
-    // Save to Firebase
-    db.ref("lostItems/"+id).set(newItem)
-      .then(()=>{
-        const qrLink = window.location.origin + "/item.html?item=" + id;
-        generateQR(qrLink, "qrContainer");
-
-        document.getElementById("emailNotice").innerText =
-          `📧 Confirmation email sent to ${email} (simulated)`;
-
-        document.getElementById("registerForm").reset();
-      })
-      .catch(err => alert("❌ Error: " + err));
-  });
-
-};
+      document.getElementById("registerForm").reset();
+    })
+    .catch(err => alert("❌ Error: " + err));
+});
 </script>
 </body>
 </html>
