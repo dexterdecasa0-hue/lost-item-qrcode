@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>we
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -414,7 +414,7 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
 
   db.ref("lostItems/"+id).set(newItem)
     .then(()=>{
-      const qrLink = window.location.origin + "/report-manual.html?item=" + id;
+      const qrLink = "https://dexterdecasa0-hue.github.io/lost-item-qrcode/report-manual.html?item=" + id;
       generateQR(qrLink, "qrContainer");
 
       document.getElementById("emailNotice").innerText =
@@ -428,3 +428,4 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
 </script>
 </body>
 </html>
+
