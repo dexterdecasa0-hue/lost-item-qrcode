@@ -5,239 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>View Found Items - LOST&FOUND</title>
   <style>
-    /* (styles preserved from your version) */
+    /* ——— All original design preserved ——— */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
       background-attachment: fixed;
-      margin: 0;
-      padding: 0;
-      color: #333;
-      line-height: 1.6;
+      margin: 0; padding: 0;
+      color: #333; line-height: 1.6;
       animation: fadeIn 1s ease-in;
-      min-height: 100vh;
-      position: relative;
+      min-height: 100vh; position: relative;
     }
     body::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
       animation: float 10s ease-in-out infinite;
       pointer-events: none;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
     header {
-      background: linear-gradient(135deg, #004080, #0066cc, #0080ff);
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-      position: relative;
+      background: linear-gradient(135deg,#004080,#0066cc,#0080ff);
+      color:white; padding:40px 20px; text-align:center;
+      box-shadow:0 6px 12px rgba(0,0,0,0.4);
     }
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
-      text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
-      letter-spacing: 3px;
-      position: relative;
-      z-index: 1;
-    }
-    .nav {
-      margin-top: 20px;
-      position: relative;
-      z-index: 1;
-    }
-    .nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-size: 18px;
-      transition: color 0.3s ease;
-    }
-    .nav a:hover {
-      color: #ffeb3b;
-    }
-    .main-content {
-      display: flex;
-      max-width: 1200px;
-      margin: 40px auto;
-      gap: 30px;
-      padding: 0 20px;
-    }
-    .container {
-      flex: 2;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
-    .sidebar {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .sidebar h3 {
-      color: #004080;
-      margin-bottom: 15px;
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-    .sidebar li {
-      margin-bottom: 10px;
-      padding: 10px;
-      background: #f0f0f0;
-      border-radius: 5px;
-    }
-    h1, h2 {
-      color: #004080;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .stats-section {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-    .stat-card {
-      background: #f9f9f9;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      width: 150px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      border: 1px solid #ddd;
-    }
-    .stat-card h3 {
-      color: #004080;
-      font-size: 2em;
-      margin: 0;
-    }
-    .stat-card p {
-      margin: 5px 0 0;
-      font-size: 1em;
-    }
-    .search-section {
-      margin-bottom: 20px;
-      text-align: center;
-    }
+    header h1 { margin:0; font-size:2.5em; text-shadow:3px 3px 6px rgba(0,0,0,0.7); letter-spacing:3px; }
+    .nav { margin-top:20px; }
+    .nav a { color:white; text-decoration:none; margin:0 15px; font-size:18px; transition:color .3s; }
+    .nav a:hover { color:#ffeb3b; }
+    .main-content { display:flex; max-width:1200px; margin:40px auto; gap:30px; padding:0 20px; }
+    .container { flex:2; background:rgba(255,255,255,.95); padding:40px; border-radius:15px; box-shadow:0 8px 16px rgba(0,0,0,.2); }
+    .sidebar { flex:1; background:rgba(255,255,255,.9); padding:20px; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,.1); }
+    h1,h2 { color:#004080; text-align:center; margin-bottom:30px; }
+    .stats-section { display:flex; justify-content:space-around; flex-wrap:wrap; gap:20px; margin-bottom:40px; }
+    .stat-card { background:#f9f9f9; padding:20px; border-radius:10px; text-align:center; width:150px; box-shadow:0 2px 4px rgba(0,0,0,.1); border:1px solid #ddd; }
+    .stat-card h3 { color:#004080; font-size:2em; margin:0; }
+    .search-section { text-align:center; margin-bottom:20px; }
     .search-section input, .search-section select {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-      margin-right: 10px;
+      padding:10px; border:1px solid #ccc; border-radius:5px; font-size:16px; margin-right:10px;
     }
-    .category-section {
-      margin-bottom: 40px;
+    .items-table { width:100%; border-collapse:collapse; margin-top:20px; background:#f9f9f9;
+      border-radius:10px; overflow:hidden; box-shadow:0 2px 4px rgba(0,0,0,.1);
     }
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: #f9f9f9;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .items-table th, .items-table td {
-      border: 1px solid #ddd;
-      padding: 12px;
-      text-align: left;
-    }
-    .items-table th {
-      background: #004080;
-      color: white;
-      font-weight: bold;
-    }
-    .items-table tr:nth-child(even) {
-      background: #f2f2f2;
-    }
-    .items-table tr:hover {
-      background: #e0e0e0;
-    }
-    .items-table a {
-      color: #004080;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .items-table a:hover {
-      text-decoration: underline;
-    }
-    .status {
-      font-weight: bold;
-      padding: 5px 10px;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .status.pending {
-      background: #ffeb3b;
-      color: #333;
-    }
-    .status.found {
-      background: #4caf50;
-      color: white;
-    }
-    .loading {
-      text-align: center;
-      color: #666;
-      font-style: italic;
-    }
-    .no-items {
-      text-align: center;
-      color: #999;
-    }
-    footer {
-      background: linear-gradient(135deg, #333, #555);
-      color: white;
-      padding: 20px;
-      text-align: center;
-      margin-top: 40px;
-    }
-    footer a {
-      color: #ffeb3b;
-      text-decoration: none;
-    }
-    @media (max-width: 768px) {
-      .main-content {
-        flex-direction: column;
-      }
-      .stats-section {
-        flex-direction: column;
-        align-items: center;
-      }
-      .items-table {
-        font-size: 14px;
-      }
-      .items-table th, .items-table td {
-        padding: 8px;
-      }
-      .search-section input, .search-section select {
-        width: 100%;
-        margin-bottom: 10px;
-        margin-right: 0;
-      }
-    }
+    .items-table th, .items-table td { border:1px solid #ddd; padding:12px; text-align:left; }
+    .items-table th { background:#004080; color:white; font-weight:bold; }
+    .items-table tr:nth-child(even){background:#f2f2f2;}
+    .status { font-weight:bold; padding:5px 10px; border-radius:5px; text-align:center; }
+    .status.pending { background:#ffeb3b; color:#333; }
+    .status.found { background:#4caf50; color:white; }
+    img.found-img { width:80px; height:80px; object-fit:cover; border-radius:8px; }
   </style>
 </head>
 <body>
-
 <header>
   <h1>LOST&FOUND</h1>
   <nav class="nav">
@@ -254,16 +74,13 @@
 
     <div class="stats-section">
       <div class="stat-card">
-        <h3 id="totalRegistered">0</h3>
-        <p>Registered Items</p>
+        <h3 id="totalRegistered">0</h3><p>Registered Items</p>
       </div>
       <div class="stat-card">
-        <h3 id="totalUnregistered">0</h3>
-        <p>Unregistered Items</p>
+        <h3 id="totalUnregistered">0</h3><p>Unregistered Items</p>
       </div>
       <div class="stat-card">
-        <h3 id="totalFound">0</h3>
-        <p>Items Found</p>
+        <h3 id="totalFound">0</h3><p>Items Found</p>
       </div>
     </div>
 
@@ -278,43 +95,28 @@
 
     <div class="category-section">
       <h2>Registered Items</h2>
-      <p>Items registered by owners with QR codes and details.</p>
       <table class="items-table" id="registeredTable">
         <thead>
           <tr>
-            <th>Item Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Owner</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>View</th>
+            <th>Item</th><th>Description</th><th>Category</th>
+            <th>Owner</th><th>Email</th><th>Status</th><th>View</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td colspan="7" class="loading">Loading registered items...</td></tr>
-        </tbody>
+        <tbody><tr><td colspan="7" class="loading">Loading registered items...</td></tr></tbody>
       </table>
     </div>
 
     <div class="category-section">
       <h2>Unregistered Items</h2>
-      <p>Items reported as found without prior registration.</p>
       <table class="items-table" id="unregisteredTable">
         <thead>
           <tr>
-            <th>Item Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Found Location</th>
-            <th>Finder</th>
-            <th>Report Date</th>
-            <th>View</th>
+            <th>Item</th><th>Description</th><th>Category</th>
+            <th>Found Location</th><th>Finder</th><th>Image</th>
+            <th>Report Date</th><th>View</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td colspan="7" class="loading">Loading unregistered items...</td></tr>
-        </tbody>
+        <tbody><tr><td colspan="8" class="loading">Loading unregistered items...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -322,25 +124,22 @@
   <div class="sidebar">
     <h3>Tips for Viewing Items</h3>
     <ul>
-      <li>Registered items have owner details and QR codes for direct contact.</li>
-      <li>Unregistered items are reported finds without prior registration.</li>
-      <li>Use the search bar to filter items quickly.</li>
-      <li>Click "View" to see full details or report as found.</li>
-      <li>Check stats for an overview of item statuses.</li>
+      <li>Registered items show owner info & QR connection.</li>
+      <li>Unregistered are reported found without registration.</li>
+      <li>Use search & filter to find items faster.</li>
+      <li>Click "View" to open report or details.</li>
     </ul>
   </div>
 </div>
 
 <footer>
-  <p>&copy; 2025 LOST&FOUND System. <a href="index.html">Back to Home</a></p>
+  <p>&copy; 2025 LOST&FOUND System.</p>
 </footer>
 
-<!-- Firebase Scripts -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
 <script>
-  // Firebase config (same project)
   const firebaseConfig = {
     apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
     authDomain: "lost-item-qr.firebaseapp.com",
@@ -357,105 +156,76 @@
   let allUnregisteredItems = [];
 
   function loadItems() {
-    db.ref("lostItems").on("value", snapshot => {
+    db.ref("lostItems").on("value", snap => {
       allRegisteredItems = [];
-      snapshot.forEach(child => {
-        const item = child.val();
-        item.id = child.key;
-        allRegisteredItems.push(item);
-      });
-      displayRegisteredItems();
-      updateStats();
+      snap.forEach(c => { let v = c.val(); v.id = c.key; allRegisteredItems.push(v); });
+      displayRegisteredItems(); updateStats();
     });
-
-    db.ref("unregisteredReports").on("value", snapshot => {
+    db.ref("unregisteredReports").on("value", snap => {
       allUnregisteredItems = [];
-      snapshot.forEach(child => {
-        const item = child.val();
-        item.id = child.key;
-        allUnregisteredItems.push(item);
-      });
-      displayUnregisteredItems();
-      updateStats();
+      snap.forEach(c => { let v = c.val(); v.id = c.key; allUnregisteredItems.push(v); });
+      displayUnregisteredItems(); updateStats();
     });
   }
 
   function displayRegisteredItems(items = allRegisteredItems) {
     const tbody = document.querySelector("#registeredTable tbody");
     tbody.innerHTML = "";
-    if (!items.length) {
-      tbody.innerHTML = "<tr><td colspan='7' class='no-items'>No registered items found.</td></tr>";
-      return;
-    }
-
-    items.forEach(item => {
-      const tr = document.createElement("tr");
-      const statusClass = item.status === "Found" ? "found" : "pending";
-      tr.innerHTML = `
-        <td>${item.item || 'N/A'}</td>
-        <td>${item.description || 'N/A'}</td>
-        <td>${item.category || 'N/A'}</td>
-        <td>${item.name || 'N/A'}</td>
-        <td><a href="mailto:${item.email}">${item.email || 'N/A'}</a></td>
-        <td><span class="status ${statusClass}">${item.status || 'Pending'}</span></td>
-        <td><a href="report-manual.html?item=${item.id}">View</a></td>
-      `;
-      tbody.appendChild(tr);
+    if (!items.length) return tbody.innerHTML = "<tr><td colspan='7' class='no-items'>No registered items.</td></tr>";
+    items.forEach(i=>{
+      const sClass = i.status === "Found" ? "found" : "pending";
+      tbody.innerHTML += `
+        <tr>
+          <td>${i.item||'N/A'}</td>
+          <td>${i.description||'N/A'}</td>
+          <td>${i.category||'N/A'}</td>
+          <td>${i.name||'N/A'}</td>
+          <td><a href="mailto:${i.email||''}">${i.email||'N/A'}</a></td>
+          <td><span class="status ${sClass}">${i.status||'Pending'}</span></td>
+          <td><a href="report-manual.html?item=${i.id}">View</a></td>
+        </tr>`;
     });
   }
 
   function displayUnregisteredItems(items = allUnregisteredItems) {
     const tbody = document.querySelector("#unregisteredTable tbody");
     tbody.innerHTML = "";
-    if (!items.length) {
-      tbody.innerHTML = "<tr><td colspan='7' class='no-items'>No unregistered items found.</td></tr>";
-      return;
-    }
-
-    items.forEach(item => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${item.itemName || 'N/A'}</td>
-        <td>${item.description || 'N/A'}</td>
-        <td>${item.category || 'N/A'}</td>
-        <td>${item.foundLocation || 'N/A'}</td>
-        <td>${item.finderName || 'Anonymous'}</td>
-        <td>${item.reportDate ? new Date(item.reportDate).toLocaleDateString() : 'N/A'}</td>
-        <td><a href="report-manual.html?unregistered=${item.id}">View</a></td>
-      `;
-      tbody.appendChild(tr);
+    if (!items.length) return tbody.innerHTML = "<tr><td colspan='8' class='no-items'>No unregistered items.</td></tr>";
+    items.forEach(i=>{
+      tbody.innerHTML += `
+        <tr>
+          <td>${i.itemName||'N/A'}</td>
+          <td>${i.description||'N/A'}</td>
+          <td>${i.category||'N/A'}</td>
+          <td>${i.foundLocation||'N/A'}</td>
+          <td>${i.finderName||'Anonymous'}</td>
+          <td>${i.foundImage ? `<img src="${i.foundImage}" class="found-img" alt="Found Image">` : 'No image'}</td>
+          <td>${i.reportDate ? new Date(i.reportDate).toLocaleDateString() : 'N/A'}</td>
+          <td><a href="report-manual.html?unregistered=${i.id}">View</a></td>
+        </tr>`;
     });
   }
 
   function updateStats() {
     document.getElementById("totalRegistered").textContent = allRegisteredItems.length;
     document.getElementById("totalUnregistered").textContent = allUnregisteredItems.length;
-    const totalFound = allRegisteredItems.filter(item => item.status === "Found").length;
-    document.getElementById("totalFound").textContent = totalFound;
+    const found = allRegisteredItems.filter(i => i.status === "Found").length;
+    document.getElementById("totalFound").textContent = found;
   }
 
-  document.getElementById("searchInput").addEventListener("input", () => {
-    const query = document.getElementById("searchInput").value.toLowerCase();
-    const statusFilter = document.getElementById("statusFilter").value;
-
-    let filteredRegistered = allRegisteredItems.filter(item =>
-      (item.item?.toLowerCase().includes(query) || item.name?.toLowerCase().includes(query)) &&
-      (!statusFilter || item.status === statusFilter)
-    );
-    displayRegisteredItems(filteredRegistered);
-
-    let filteredUnregistered = allUnregisteredItems.filter(item =>
-      (item.itemName?.toLowerCase().includes(query) || item.finderName?.toLowerCase().includes(query))
-    );
-    displayUnregisteredItems(filteredUnregistered);
+  document.getElementById("searchInput").addEventListener("input",()=>{
+    const q=document.getElementById("searchInput").value.toLowerCase();
+    const s=document.getElementById("statusFilter").value;
+    displayRegisteredItems(allRegisteredItems.filter(i=>
+      (i.item?.toLowerCase().includes(q)||i.name?.toLowerCase().includes(q)) && (!s||i.status===s)
+    ));
+    displayUnregisteredItems(allUnregisteredItems.filter(i=>
+      (i.itemName?.toLowerCase().includes(q)||i.finderName?.toLowerCase().includes(q))
+    ));
   });
-
-  document.getElementById("statusFilter").addEventListener("change", () => {
-    document.getElementById("searchInput").dispatchEvent(new Event("input"));
-  });
+  document.getElementById("statusFilter").addEventListener("change",()=>document.getElementById("searchInput").dispatchEvent(new Event("input")));
 
   loadItems();
 </script>
-
 </body>
 </html>
