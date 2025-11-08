@@ -1,89 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Admin Dashboard</title>
-<style>
-body { font-family: Arial; padding: 20px; }
-#itemsContainer { max-width: 800px; margin:auto;}
-.item { border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;}
-button { padding:5px 10px; cursor:pointer; background:#004080; color:white; border:none; border-radius:3px; margin-top:5px;}
-button.delete { background:red; }
-.status { font-weight:bold; }
-.new { color:green; }
-.found { color:orange; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - LOST&FOUND</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      margin: 0;
+      color: #333;
+    }
+    header {
+      background: #004080;
+      color: #fff;
+      text-align: center;
+      padding: 25px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      letter-spacing: 2px;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: #ffeb3b; }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      padding: 30px;
+      animation: fadeIn 1s ease-in;
+    }
+
+    h2 {
+      color: #004080;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: linear-gradient(135deg, #004080, #0066cc);
+      color: white;
+    }
+    tr:nth-child(even) { background: #f9f9f9; }
+
+    button {
+      background: linear-gradient(135deg, #004080, #0066cc);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #0066cc, #0080ff);
+      transform: translateY(-2px);
+    }
+
+    .highlight {
+      background-color: #e0f7fa !important;
+      transition: background-color 1s ease;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(135deg, #333, #555);
+      color: white;
+      margin-top: 40px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #4caf50;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      opacity: 0;
+      animation: slideIn 0.5s forwards;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      table, th, td { font-size: 14px; }
+      th, td { padding: 8px; }
+    }
+  </style>
 </head>
 <body>
-<h1>Admin Dashboard</h1>
-<div id="itemsContainer"></div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<header>
+  <h1>LOST&FOUND Admin Dashboard</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="register.html">Register</a>
+    <a href="item.html">View Items</a>
+    <a href="report-manual.html">Report</a>
+  </nav>
+</header>
 
+<div class="container">
+  <h2>All Registered Items</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Description</th>
+        <th>Owner/Finder</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="itemsTable">
+      <tr><td colspan="5" style="text-align:center;">Loading data...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  &copy; 2025 LOST&FOUND System | <a href="index.html" style="color:#ffeb3b;">Back to Home</a>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
+  apiKey: "YOUR_API_KEY",
   authDomain: "lost-item-qr.firebaseapp.com",
-  databaseURL: "https://lost-item-qr-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com/",
   projectId: "lost-item-qr",
-  storageBucket: "lost-item-qr.firebasestorage.app",
-  messagingSenderId: "1026817510307",
-  appId: "1:1026817510307:web:9a67340577a04797912816",
-  measurementId: "G-QY02LG8PCX"
+  storageBucket: "lost-item-qr.appspot.com"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const container = document.getElementById("itemsContainer");
 
-// Real-time updates
-db.ref("lostItems").on("value", snapshot=>{
-  container.innerHTML = "";
-  const items = snapshot.val();
-  if(!items){ container.innerHTML="<p>No items registered.</p>"; return; }
+const tbody = document.getElementById("itemsTable");
 
-  Object.values(items).forEach(item=>{
-    const div = document.createElement("div");
-    div.className = "item";
-    let statusClass = item.status==="Found" ? "found" : "new";
+function showToast(message, type='success') {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.style.background = type === 'error' ? '#f44336' : '#4caf50';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
 
-    div.innerHTML = `
-      <strong>Item:</strong> ${item.item}<br>
-      <strong>Owner:</strong> ${item.name}<br>
-      <strong>Email:</strong> ${item.email}<br>
-      <strong>Status:</strong> <span class="status ${statusClass}">${item.status}</span><br>
-      <button onclick="markFound(${item.id})">Mark as Found</button>
-      <button class="delete" onclick="deleteItem(${item.id})">Delete Item</button>
-    `;
-    container.appendChild(div);
+// render table row
+function renderRow(id, data, type) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${data.itemName}</td>
+    <td>${data.description}</td>
+    <td>${data.ownerName || data.finderName || "N/A"}</td>
+    <td>${data.status || (type === "found" ? "Found" : "Lost")}</td>
+    <td>
+      ${type === "lost" && data.status !== "Found" ? `<button onclick="markFound('${id}')">Mark Found</button>` : ""}
+      <button onclick="deleteItem('${id}','${type}')">Delete</button>
+    </td>`;
+  tbody.appendChild(tr);
+  tr.classList.add("highlight");
+  setTimeout(() => tr.classList.remove("highlight"), 2000);
+}
 
-    // 🔔 Notifications
-    if(item.newRegistration){
-      alert(`🔔 New item registered: ${item.item} by ${item.name}`);
-      db.ref("lostItems/"+item.id+"/newRegistration").set(false);
-    }
+function loadData() {
+  tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Loading...</td></tr>";
 
-    if(item.reportedFound){
-      alert(`🔔 Item reported as found: ${item.item}`);
-      db.ref("lostItems/"+item.id+"/reportedFound").set(false);
+  Promise.all([
+    db.ref("lostItems").once("value"),
+    db.ref("foundReports").once("value")
+  ]).then(([lostSnap, foundSnap]) => {
+    tbody.innerHTML = "";
+    lostSnap.forEach(child => renderRow(child.key, child.val(), "lost"));
+    foundSnap.forEach(child => renderRow(child.key, child.val(), "found"));
+    if (!lostSnap.exists() && !foundSnap.exists()) {
+      tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No items yet.</td></tr>";
     }
   });
-});
-
-function markFound(id){
-  db.ref("lostItems/"+id+"/status").set("Found")
-    .then(()=>alert("✅ Status updated to Found!"))
-    .catch(err=>alert("Error: "+err));
 }
 
-function deleteItem(id){
-  if(confirm("Are you sure to delete this item?")){
-    db.ref("lostItems/"+id).remove()
-      .then(()=>alert("✅ Item deleted!"))
-      .catch(err=>alert("Error: "+err));
+window.markFound = function(id) {
+  db.ref("lostItems/" + id).update({ status: "Found" })
+    .then(() => { showToast("Item marked as Found!"); loadData(); })
+    .catch(() => showToast("Error updating status", "error"));
+};
+
+window.deleteItem = function(id, type) {
+  if (confirm("Are you sure you want to delete this item?")) {
+    db.ref((type === "lost" ? "lostItems/" : "foundReports/") + id)
+      .remove()
+      .then(() => { showToast("Item deleted successfully!"); loadData(); })
+      .catch(() => showToast("Error deleting item", "error"));
   }
-}
+};
+
+loadData();
 </script>
 </body>
 </html>
