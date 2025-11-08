@@ -2,62 +2,51 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Report Found Item</title>
 <style>
-body { font-family: Arial; padding: 20px; text-align:center;}
-#itemContainer { max-width: 600px; margin:auto; border:1px solid #ccc; padding:10px; border-radius:5px;}
-button { padding:10px 15px; cursor:pointer; background:#004080; color:white; border:none; border-radius:3px; margin-top:10px;}
+  body { font-family:'Segoe UI'; background:linear-gradient(135deg,#667eea,#764ba2); color:white; text-align:center; }
+  form { background:white; color:#333; max-width:400px; margin:40px auto; padding:25px; border-radius:10px; }
+  input, textarea, button { width:90%; padding:10px; margin:10px 0; border:none; border-radius:5px; }
+  button { background:#004080; color:white; font-weight:bold; cursor:pointer; }
+  button:hover { background:#0066cc; }
 </style>
 </head>
 <body>
-<h1>Report Found Item</h1>
-<div id="itemContainer"></div>
+  <h1>Report Found Item</h1>
+  <form id="foundForm">
+    <input type="text" id="itemName" placeholder="Item Name" required>
+    <textarea id="description" placeholder="Item Description" required></textarea>
+    <input type="text" id="finderName" placeholder="Your Name" required>
+    <button type="submit">Submit</button>
+  </form>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
+  apiKey: "YOUR_API_KEY",
   authDomain: "lost-item-qr.firebaseapp.com",
-  databaseURL: "https://lost-item-qr-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com/",
   projectId: "lost-item-qr",
-  storageBucket: "lost-item-qr.firebasestorage.app",
-  messagingSenderId: "1026817510307",
-  appId: "1:1026817510307:web:9a67340577a04797912816",
-  measurementId: "G-QY02LG8PCX"
+  storageBucket: "lost-item-qr.appspot.com"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 
-const urlParams = new URLSearchParams(window.location.search);
-const itemId = urlParams.get("item");
-const container = document.getElementById("itemContainer");
-
-if(itemId){
-  db.ref("lostItems/"+itemId).once("value").then(snapshot=>{
-    const item = snapshot.val();
-    if(item){
-      container.innerHTML = `
-        <strong>Item:</strong> ${item.item}<br>
-        <strong>Owner:</strong> ${item.name}<br>
-        <strong>Email:</strong> ${item.email}<br>
-        <strong>Status:</strong> ${item.status}<br>
-        <button id="reportBtn">Report as Found</button>
-      `;
-      document.getElementById("reportBtn").addEventListener("click", ()=>{
-        db.ref("lostItems/"+itemId).update({status:"Found", reportedFound:true})
-          .then(()=>{
-            alert("✅ Item marked as Found! The owner will be notified (simulated).");
-            location.reload();
-          });
-      });
-    } else container.innerHTML="❌ Item not found.";
+document.getElementById("foundForm").addEventListener("submit", e=>{
+  e.preventDefault();
+  const data={
+    itemName:itemName.value,
+    description:description.value,
+    finderName:finderName.value,
+    status:"Found"
+  };
+  firebase.database().ref("foundReports").push(data).then(()=>{
+    alert("Found item reported!");
+    e.target.reset();
+    location.href="index.html";
   });
-} else {
-  container.innerHTML = "❌ No item scanned. Please scan the QR code.";
-}
+});
 </script>
 </body>
 </html>
