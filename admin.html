@@ -18,104 +18,24 @@
       padding: 25px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-    header h1 {
-      margin: 0;
-      font-size: 2em;
-      letter-spacing: 2px;
-    }
-    nav a {
-      color: #fff;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
+    header h1 { margin: 0; font-size: 2em; letter-spacing: 2px; }
+    nav a { color: #fff; margin: 0 10px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
     nav a:hover { color: #ffeb3b; }
 
-    .container {
-      max-width: 1000px;
-      margin: 40px auto;
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      padding: 30px;
-      animation: fadeIn 1s ease-in;
-    }
-
-    h2 {
-      color: #004080;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      background: linear-gradient(135deg, #004080, #0066cc);
-      color: white;
-    }
+    .container { max-width: 1000px; margin: 40px auto; background: #fff; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); padding: 30px; animation: fadeIn 1s ease-in; }
+    h2 { color: #004080; text-align: center; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+    th { background: linear-gradient(135deg, #004080, #0066cc); color: white; }
     tr:nth-child(even) { background: #f9f9f9; }
-
-    button {
-      background: linear-gradient(135deg, #004080, #0066cc);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    button:hover {
-      background: linear-gradient(135deg, #0066cc, #0080ff);
-      transform: translateY(-2px);
-    }
-
-    .highlight {
-      background-color: #e0f7fa !important;
-      transition: background-color 1s ease;
-    }
-
-    footer {
-      text-align: center;
-      padding: 15px;
-      background: linear-gradient(135deg, #333, #555);
-      color: white;
-      margin-top: 40px;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: #4caf50;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 5px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      opacity: 0;
-      animation: slideIn 0.5s forwards;
-    }
-    @keyframes slideIn {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 768px) {
-      table, th, td { font-size: 14px; }
-      th, td { padding: 8px; }
-    }
+    button { background: linear-gradient(135deg, #004080, #0066cc); color: white; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; transition: all 0.3s; }
+    button:hover { background: linear-gradient(135deg, #0066cc, #0080ff); transform: translateY(-2px); }
+    .highlight { background-color: #e0f7fa !important; transition: background-color 1s ease; }
+    footer { text-align: center; padding: 15px; background: linear-gradient(135deg, #333, #555); color: white; margin-top: 40px; }
+    .toast { position: fixed; bottom: 25px; right: 25px; background: #4caf50; color: white; padding: 12px 20px; border-radius: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); opacity: 0; animation: slideIn 0.5s forwards; }
+    @keyframes slideIn { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { table, th, td { font-size: 14px; } th, td { padding: 8px; } }
   </style>
 </head>
 <body>
@@ -127,6 +47,7 @@
     <a href="register.html">Register</a>
     <a href="item.html">View Items</a>
     <a href="report-manual.html">Report</a>
+    <a href="#" id="logoutBtn" style="color:#ffeb3b; margin-left:10px;">Logout</a>
   </nav>
 </header>
 
@@ -155,76 +76,90 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "lost-item-qr.firebaseapp.com",
-  databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com/",
-  projectId: "lost-item-qr",
-  storageBucket: "lost-item-qr.appspot.com"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-const tbody = document.getElementById("itemsTable");
-
-function showToast(message, type='success') {
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.style.background = type === 'error' ? '#f44336' : '#4caf50';
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
-// render table row
-function renderRow(id, data, type) {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>${data.itemName}</td>
-    <td>${data.description}</td>
-    <td>${data.ownerName || data.finderName || "N/A"}</td>
-    <td>${data.status || (type === "found" ? "Found" : "Lost")}</td>
-    <td>
-      ${type === "lost" && data.status !== "Found" ? `<button onclick="markFound('${id}')">Mark Found</button>` : ""}
-      <button onclick="deleteItem('${id}','${type}')">Delete</button>
-    </td>`;
-  tbody.appendChild(tr);
-  tr.classList.add("highlight");
-  setTimeout(() => tr.classList.remove("highlight"), 2000);
-}
-
-function loadData() {
-  tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Loading...</td></tr>";
-
-  Promise.all([
-    db.ref("lostItems").once("value"),
-    db.ref("foundReports").once("value")
-  ]).then(([lostSnap, foundSnap]) => {
-    tbody.innerHTML = "";
-    lostSnap.forEach(child => renderRow(child.key, child.val(), "lost"));
-    foundSnap.forEach(child => renderRow(child.key, child.val(), "found"));
-    if (!lostSnap.exists() && !foundSnap.exists()) {
-      tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No items yet.</td></tr>";
-    }
-  });
-}
-
-window.markFound = function(id) {
-  db.ref("lostItems/" + id).update({ status: "Found" })
-    .then(() => { showToast("Item marked as Found!"); loadData(); })
-    .catch(() => showToast("Error updating status", "error"));
-};
-
-window.deleteItem = function(id, type) {
-  if (confirm("Are you sure you want to delete this item?")) {
-    db.ref((type === "lost" ? "lostItems/" : "foundReports/") + id)
-      .remove()
-      .then(() => { showToast("Item deleted successfully!"); loadData(); })
-      .catch(() => showToast("Error deleting item", "error"));
+  // Guard: require login from admin-login (sessionStorage flag)
+  if (sessionStorage.getItem("lostfound_admin") !== "true") {
+    // Not logged in — redirect to admin login
+    window.location.href = "admin-login.html";
   }
-};
 
-loadData();
+  const firebaseConfig = {
+    apiKey: "AIzaSyAgDbyZ5koffA_M60oS9x6aaI_UyViLZVw",
+    authDomain: "lost-item-qr.firebaseapp.com",
+    databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com/",
+    projectId: "lost-item-qr",
+    storageBucket: "lost-item-qr.appspot.com"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const tbody = document.getElementById("itemsTable");
+
+  function showToast(message, type='success') {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.style.background = type === 'error' ? '#f44336' : '#4caf50';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  function renderRow(id, data, type) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${data.itemName || data.item || 'N/A'}</td>
+      <td>${data.description || 'N/A'}</td>
+      <td>${data.ownerName || data.finderName || data.name || 'N/A'}</td>
+      <td>${data.status || (type === "found" ? "Found" : (data.status || 'Pending'))}</td>
+      <td>
+        ${type === "lost" && data.status !== "Found" ? `<button onclick="markFound('${id}')">Mark Found</button>` : ""}
+        <button onclick="deleteItem('${id}','${type}')">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    tr.classList.add("highlight");
+    setTimeout(() => tr.classList.remove("highlight"), 2000);
+  }
+
+  function loadData() {
+    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Loading...</td></tr>";
+    Promise.all([
+      db.ref("lostItems").once("value"),
+      db.ref("unregisteredReports").once("value")
+    ]).then(([lostSnap, unregSnap]) => {
+      tbody.innerHTML = "";
+      if (lostSnap.exists()) {
+        lostSnap.forEach(child => renderRow(child.key, child.val(), "lost"));
+      }
+      if (unregSnap.exists()) {
+        unregSnap.forEach(child => renderRow(child.key, child.val(), "found"));
+      }
+      if (!lostSnap.exists() && !unregSnap.exists()) {
+        tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No items yet.</td></tr>";
+      }
+    });
+  }
+
+  window.markFound = function(id) {
+    db.ref("lostItems/" + id).update({ status: "Found" })
+      .then(() => { showToast("Item marked as Found!"); loadData(); })
+      .catch(() => showToast("Error updating status", "error"));
+  };
+
+  window.deleteItem = function(id, type) {
+    if (confirm("Are you sure you want to delete this item?")) {
+      const path = (type === "lost") ? "lostItems/" + id : "unregisteredReports/" + id;
+      db.ref(path).remove()
+        .then(() => { showToast("Item deleted successfully!"); loadData(); })
+        .catch(() => showToast("Error deleting item", "error"));
+    }
+  };
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    sessionStorage.removeItem("lostfound_admin");
+    window.location.href = "admin-login.html";
+  });
+
+  loadData();
 </script>
 </body>
 </html>
