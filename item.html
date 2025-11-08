@@ -1,1 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Items</title>
+<style>
+  body { font-family:'Segoe UI'; background:linear-gradient(135deg,#667eea,#764ba2); color:white; margin:0; text-align:center; }
+  table { width:90%; margin:40px auto; border-collapse:collapse; background:white; color:#333; border-radius:10px; overflow:hidden; }
+  th, td { padding:12px; border-bottom:1px solid #ddd; }
+  th { background:#004080; color:white; }
+  tr:nth-child(even){background:#f9f9f9;}
+</style>
+</head>
+<body>
+  <h1>All Reported Items</h1>
+  <table>
+    <thead><tr><th>Item</th><th>Description</th><th>Owner/Finder</th><th>Status</th></tr></thead>
+    <tbody id="tableBody"><tr><td colspan="4">Loading...</td></tr></tbody>
+  </table>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "lost-item-qr.firebaseapp.com",
+  databaseURL: "https://lost-item-qr-default-rtdb.firebaseio.com/",
+  projectId: "lost-item-qr",
+  storageBucket: "lost-item-qr.appspot.com"
+};
+firebase.initializeApp(firebaseConfig);
+
+const tbody = document.getElementById("tableBody");
+Promise.all([
+  firebase.database().ref("lostItems").once("value"),
+  firebase.database().ref("foundReports").once("value")
+]).then(([lostSnap, foundSnap])=>{
+  tbody.innerHTML="";
+  lostSnap.forEach(c=>{
+    const v=c.val();
+    tbody.innerHTML+=`<tr><td>${v.itemName}</td><td>${v.description}</td><td>${v.ownerName}</td><td>${v.status}</td></tr>`;
+  });
+  foundSnap.forEach(c=>{
+    const v=c.val();
+    tbody.innerHTML+=`<tr><td>${v.itemName}</td><td>${v.description}</td><td>${v.finderName}</td><td>Found</td></tr>`;
+  });
+});
+</script>
+</body>
+</html>
+
 
