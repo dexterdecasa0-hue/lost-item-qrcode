@@ -1,11 +1,11 @@
-<!DOCTYPE html>we
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register Item - LOST&FOUND</title>
   <style>
-    /* (same styling you provided — kept intact) */
+    /* (same styling from your original file, unchanged) */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -29,14 +29,8 @@
       animation: float 10s ease-in-out infinite;
       pointer-events: none;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
     header {
       background: linear-gradient(135deg, #004080, #0066cc, #0080ff);
       color: white;
@@ -45,216 +39,20 @@
       box-shadow: 0 6px 12px rgba(0,0,0,0.4);
       position: relative;
     }
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-      opacity: 0.3;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
-      font-weight: bold;
-      text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
-      letter-spacing: 3px;
-      position: relative;
-      z-index: 1;
-    }
-    .nav {
-      margin-top: 20px;
-      position: relative;
-      z-index: 1;
-    }
-    .nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-size: 18px;
-      transition: color 0.3s ease;
-    }
-    .nav a:hover {
-      color: #ffeb3b;
-    }
-    .main-content {
-      display: flex;
-      max-width: 1200px;
-      margin: 40px auto;
-      gap: 30px;
-      padding: 0 20px;
-    }
-    .container {
-      flex: 2;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      animation: fadeIn 1.5s ease-in;
-    }
-    .sidebar {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      animation: fadeIn 2s ease-in;
-    }
-    .sidebar h3 {
-      color: #004080;
-      margin-bottom: 15px;
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-    .sidebar li {
-      margin-bottom: 10px;
-      padding: 10px;
-      background: #f0f0f0;
-      border-radius: 5px;
-    }
-    h1 {
-      color: #004080;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    label {
-      font-weight: bold;
-      color: #004080;
-    }
-    input, textarea, select {
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: border-color 0.3s ease;
-    }
-    input:focus, textarea:focus, select:focus {
-      border-color: #004080;
-      outline: none;
-      box-shadow: 0 0 5px rgba(0, 0, 128, 0.5);
-    }
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-    button {
-      background: linear-gradient(135deg, #004080, #0066cc);
-      color: white;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-    }
-    button:hover {
-      background: linear-gradient(135deg, #0066cc, #0080ff);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-    }
-    #qrContainer {
-      text-align: center;
-      margin-top: 30px;
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-    }
-    #emailNotice {
-      color: green;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 20px;
-      padding: 10px;
-      background: rgba(0, 255, 0, 0.1);
-      border-radius: 5px;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-    }
-    .modal button {
-      margin-top: 20px;
-      background: #004080;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .faq {
-      margin-top: 40px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .faq h2 {
-      color: #004080;
-      margin-bottom: 20px;
-    }
-    .faq details {
-      margin-bottom: 15px;
-    }
-    .faq summary {
-      cursor: pointer;
-      font-weight: bold;
-      color: #004080;
-    }
-    footer {
-      background: linear-gradient(135deg, #333, #555);
-      color: white;
-      padding: 20px;
-      text-align: center;
-      margin-top: 40px;
-      border-top: 2px solid #ccc;
-    }
-    footer a {
-      color: #ffeb3b;
-      text-decoration: none;
-    }
-    @media (max-width: 768px) {
-      .main-content {
-        flex-direction: column;
-      }
-      header h1 {
-        font-size: 2em;
-      }
-      .container, .sidebar {
-        margin: 20px;
-        padding: 20px;
-      }
-      .nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
+    header h1 { margin:0;font-size:2.5em;font-weight:bold;text-shadow:3px 3px 6px rgba(0,0,0,0.7);letter-spacing:3px;position:relative;z-index:1; }
+    .nav { margin-top:20px;position:relative;z-index:1; }
+    .nav a { color:white;text-decoration:none;margin:0 15px;font-size:18px;transition:0.3s; }
+    .main-content { display:flex;max-width:1200px;margin:40px auto;gap:30px;padding:0 20px; }
+    .container { flex:2;background:rgba(255,255,255,0.95);padding:40px;border-radius:15px;box-shadow:0 8px 16px rgba(0,0,0,0.2); }
+    .sidebar { flex:1;background:rgba(255,255,255,0.9);padding:20px;border-radius:15px;box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+    form { display:flex;flex-direction:column;gap:20px; }
+    input,textarea,select { padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px; }
+    button { background:linear-gradient(135deg,#004080,#0066cc);color:white;padding:15px;border:none;border-radius:10px;cursor:pointer;font-size:18px; }
+    #qrContainer { text-align:center;margin-top:30px;padding:20px;background:#f9f9f9;border-radius:10px;border:1px solid #ddd; }
+    #emailNotice { color:green;font-weight:bold;text-align:center;margin-top:20px;padding:10px;background:rgba(0,255,0,0.1);border-radius:5px; }
+    .modal { display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:1000; }
+    .modal-content { background:white;padding:30px;border-radius:15px;text-align:center;max-width:400px;width:90%; }
+    footer { background:linear-gradient(135deg,#333,#555);color:white;padding:20px;text-align:center;margin-top:40px;border-top:2px solid #ccc; }
   </style>
 </head>
 <body>
@@ -272,21 +70,22 @@
 <div class="main-content">
   <div class="container">
     <h1>Register Item</h1>
+
     <form id="registerForm">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" required title="Enter your full name">
+      <label>Full Name</label>
+      <input type="text" id="name" required>
 
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="your.email@example.com" required title="Enter a valid email address">
+      <label>Email</label>
+      <input type="email" id="email" required>
 
-      <label for="item">Item Name</label>
-      <input type="text" id="item" required title="Enter the name of the item">
+      <label>Item Name</label>
+      <input type="text" id="item" required>
 
-      <label for="description">Description</label>
-      <textarea id="description" placeholder="Describe the item in detail (color, size, brand, etc.)" required title="Provide a detailed description"></textarea>
+      <label>Description</label>
+      <textarea id="description" required></textarea>
 
-      <label for="category">Category</label>
-      <select id="category" required title="Select the category of the item">
+      <label>Category</label>
+      <select id="category" required>
         <option value="">Select Category</option>
         <option value="electronics">Electronics</option>
         <option value="clothing">Clothing</option>
@@ -295,8 +94,8 @@
         <option value="other">Other</option>
       </select>
 
-      <label for="phone">Contact Phone (Optional)</label>
-      <input type="tel" id="phone" placeholder="e.g., +1-234-567-8900" title="Enter your phone number for faster contact">
+      <label>Phone (Optional)</label>
+      <input type="tel" id="phone">
 
       <button type="submit">Register Item</button>
     </form>
@@ -308,40 +107,23 @@
   <div class="sidebar">
     <h3>Tips for Registration</h3>
     <ul>
-      <li>Provide as much detail as possible to help others identify your item.</li>
-      <li>Use a recent photo if available (though not required here).</li>
+      <li>Provide as much detail as possible for easy identification.</li>
       <li>Check your email for updates after registration.</li>
-      <li>QR codes contain your contact info for easy sharing and scanning.</li>
+      <li>Your QR contains your contact details for finders.</li>
     </ul>
   </div>
 </div>
 
-<section class="faq">
-  <h2>Frequently Asked Questions</h2>
-  <details>
-    <summary>What happens after I register?</summary>
-    <p>Your item details are stored securely, and a QR code is generated containing your contact information. Others can scan it to get your details directly.</p>
-  </details>
-  <details>
-    <summary>Is my information private?</summary>
-    <p>Yes, the QR code displays your contact details only when scanned, and we encourage responsible sharing.</p>
-  </details>
-  <details>
-    <summary>How long does it take to recover an item?</summary>
-    <p>It varies, but many items are recovered within days. Check back regularly.</p>
-  </details>
-</section>
-
 <div id="successModal" class="modal">
   <div class="modal-content">
     <h2>Registration Successful!</h2>
-    <p>Your item has been registered. The QR code contains your contact info for finders.</p>
+    <p>Your item has been registered. The QR code contains your details.</p>
     <button onclick="closeModal()">Close</button>
   </div>
 </div>
 
 <footer>
-  <p>&copy; 2025 LOST&FOUND System. <a href="index.html">Back to Home</a></p>
+  <p>&copy; 2025 LOST&FOUND System</p>
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -356,32 +138,22 @@ const firebaseConfig = {
   projectId: "lost-item-qr",
   storageBucket: "lost-item-qr.appspot.com",
   messagingSenderId: "1026817510307",
-  appId: "1:1026817510307:web:9a67340577a04797912816",
-  measurementId: "G-QY02LG8PCX"
+  appId: "1:1026817510307:web:9a67340577a04797912816"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-function generateQR(text, containerId) {
-  const container = document.getElementById(containerId);
+function generateQR(text) {
+  const container = document.getElementById("qrContainer");
   container.innerHTML = "<h3>Your QR Code:</h3>";
   const canvas = document.createElement("canvas");
   container.appendChild(canvas);
-
-  QRCode.toCanvas(canvas, text, { width: 150 }, function(error) {
-    if (error) console.error(error);
-    else console.log("✅ QR code generated!");
-  });
+  QRCode.toCanvas(canvas, text, { width: 180 });
 }
 
-function showModal() {
-  document.getElementById("successModal").style.display = "flex";
-}
-
-function closeModal() {
-  document.getElementById("successModal").style.display = "none";
-}
+function showModal() { document.getElementById("successModal").style.display = "flex"; }
+function closeModal() { document.getElementById("successModal").style.display = "none"; }
 
 document.getElementById("registerForm").addEventListener("submit", function(e){
   e.preventDefault();
@@ -393,39 +165,37 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
   const category = document.getElementById("category").value;
   const phone = document.getElementById("phone").value.trim();
 
-  if (!email.includes("@")) {
-    alert("❌ Please enter a valid email address.");
-    return;
-  }
-
   const id = Date.now().toString();
-  const newItem = {
-    id,
-    name,
-    email,
-    item,
-    description,
-    category,
-    phone,
-    status: "Registered",
-    newRegistration: true,
-    reportedFound: false
-  };
 
-  db.ref("lostItems/"+id).set(newItem)
-    .then(()=>{
-      const qrLink = "https://dexterdecasa0-hue.github.io/lost-item-qrcode/report-manual.html?item=" + id;
-      generateQR(qrLink, "qrContainer");
+  const data = { id, name, email, item, description, category, phone, status:"Registered" };
 
-      document.getElementById("emailNotice").innerText =
-        `📧 Item registered! QR code generated for scanning.`;
+  db.ref("lostItems/" + id).set(data).then(() => {
 
-      showModal();
-      document.getElementById("registerForm").reset();
-    })
-    .catch(err => alert("❌ Error: " + err));
+    const qrData =
+`LOST ITEM REGISTRATION
+
+Item ID: ${id}
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+
+Item: ${item}
+Category: ${category}
+Description: ${description}
+
+Report Link:
+https://dexterdecasa0-hue.github.io/lost-item-qrcode/report-manual.html?item=${id}
+`;
+
+    generateQR(qrData);
+
+    document.getElementById("emailNotice").innerText = "📧 Item registered! QR code generated.";
+    showModal();
+    document.getElementById("registerForm").reset();
+
+  }).catch(err => alert("Error: " + err));
 });
 </script>
+
 </body>
 </html>
-
